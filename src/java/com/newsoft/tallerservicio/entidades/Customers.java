@@ -6,21 +6,14 @@
 package com.newsoft.tallerservicio.entidades;
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -29,8 +22,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name = "Customers")
 @XmlRootElement
-@NamedQueries({
-    @NamedQuery(name = "Customers.findAll", query = "SELECT c FROM Customers c")})
 public class Customers implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,9 +34,7 @@ public class Customers implements Serializable {
     @Size(min = 1, max = 50)
     @Column(name = "customerName")
     private String customerName;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     @Column(name = "contactLastName")
     private String contactLastName;
     @Size(max = 50)
@@ -81,8 +70,6 @@ public class Customers implements Serializable {
     @NotNull
     @Column(name = "creditLimit")
     private double creditLimit;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customerNumber", fetch = FetchType.LAZY)
-    private List<Orders> ordersList;
 
     public Customers() {
     }
@@ -91,10 +78,9 @@ public class Customers implements Serializable {
         this.customerNumber = customerNumber;
     }
 
-    public Customers(Integer customerNumber, String customerName, String contactLastName, String phone, double creditLimit) {
+    public Customers(Integer customerNumber, String customerName, String phone, double creditLimit) {
         this.customerNumber = customerNumber;
         this.customerName = customerName;
-        this.contactLastName = contactLastName;
         this.phone = phone;
         this.creditLimit = creditLimit;
     }
@@ -201,15 +187,6 @@ public class Customers implements Serializable {
 
     public void setCreditLimit(double creditLimit) {
         this.creditLimit = creditLimit;
-    }
-
-    @XmlTransient
-    public List<Orders> getOrdersList() {
-        return ordersList;
-    }
-
-    public void setOrdersList(List<Orders> ordersList) {
-        this.ordersList = ordersList;
     }
 
     @Override
