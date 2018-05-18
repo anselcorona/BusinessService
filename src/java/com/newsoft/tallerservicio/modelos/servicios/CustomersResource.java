@@ -109,19 +109,24 @@ public class CustomersResource {
                 Customers customerBorrar = modCustomers.getDaoCustomers().buscarPorID(cusNumber);
                 
                 if(customerBorrar == null){
+                    
                     MensajeServicio error = new MensajeServicio(Status.NOT_FOUND.getStatusCode(), "Customer does not exist");
                     
                     sProceso.getTransaction().rollback();
                     sProceso.disconnect();
                     sProceso.close();
+                    
                     sProceso = null;
+                    
                     HibernateUtil.getCurrentSession().clear();
                     System.out.println("ERROR");
 
-                }
-                HibernateUtil.getCurrentSession().clear();
+                }            
                 
-                this.modCustomers.getDaoCustomers().deleteProceso(customerBorrar);
+                HibernateUtil.getCurrentSession().clear();
+
+                
+                this.modCustomers.getDaoCustomers().delete(customerBorrar);
                 
                 sProceso.getTransaction().commit();
                 
@@ -132,7 +137,7 @@ public class CustomersResource {
 
             }catch(Exception ex){
                ex.printStackTrace();
-                /*sProceso.getTransaction().rollback();
+                sProceso.getTransaction().rollback();
                 sProceso.disconnect();
 
                 sProceso.close();
@@ -140,7 +145,7 @@ public class CustomersResource {
 
                 HibernateUtil.getCurrentSession().clear();
 
-                MensajeServicio error = new MensajeServicio(Status.INTERNAL_SERVER_ERROR.getStatusCode(), ex.getMessage());*/
+                MensajeServicio error = new MensajeServicio(Status.INTERNAL_SERVER_ERROR.getStatusCode(), ex.getMessage());
             }
     } 
     
