@@ -24,6 +24,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -98,20 +99,20 @@ public class CustomersResource {
     }
     @DELETE
     @Path("/customer/delete")
-    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-    public void delCustomer(@FormParam("cusNumber") int cusNumber) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void delCustomer(@QueryParam("cusNumber") int cusNumber) {
         
+        System.out.print(cusNumber);
         Session sProceso = HibernateUtil.getSessionFactory().openSession();
         sProceso.beginTransaction();
+        
   
             try{
-                this.modCustomers.getDaoCustomers().setSessionProceso(sProceso);
+                modCustomers.getDaoCustomers().setSessionProceso(sProceso);
                 Customers customerBorrar = modCustomers.getDaoCustomers().buscarPorID(cusNumber);
-                
-                if(customerBorrar == null){
                     
-                    MensajeServicio error = new MensajeServicio(Status.NOT_FOUND.getStatusCode(), "Customer does not exist");
-                    
+                System.out.println(customerBorrar.getCustomerNumber().toString());
+                if(customerBorrar == null){                    
                     sProceso.getTransaction().rollback();
                     sProceso.disconnect();
                     sProceso.close();
@@ -120,13 +121,13 @@ public class CustomersResource {
                     
                     HibernateUtil.getCurrentSession().clear();
                     System.out.println("ERROR");
-
+                    return;
                 }            
                 
                 HibernateUtil.getCurrentSession().clear();
 
                 
-                this.modCustomers.getDaoCustomers().delete(customerBorrar);
+                this.modCustomers.getDaoCustomers().deleteProceso(customerBorrar);
                 
                 sProceso.getTransaction().commit();
                 
