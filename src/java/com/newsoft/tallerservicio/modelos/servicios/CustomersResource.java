@@ -23,6 +23,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.GenericEntity;
@@ -51,9 +52,7 @@ public class CustomersResource {
 
     @GET
     public List<Customers> getJson() {
-        
-        
-       return modCustomers.getDaoCustomers().buscarRango(1, 5);
+       return modCustomers.getDaoCustomers().buscarTodos();
     }
 
   
@@ -98,9 +97,9 @@ public class CustomersResource {
         return null;    
     }
     @DELETE
-    @Path("/customer/delete")
+    @Path("/delete/{cusNumber}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void delCustomer(@QueryParam("cusNumber") int cusNumber) {
+    public void delCustomer(@PathParam("cusNumber") int cusNumber) {
         
         System.out.print(cusNumber);
         Session sProceso = HibernateUtil.getSessionFactory().openSession();
